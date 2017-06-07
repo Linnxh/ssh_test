@@ -15,6 +15,7 @@
 		<!-- name= "Product_*" 代表这个action处理所有以Product_*开头的请求 method= "{1} " 根据前面请求Product_*methodname，调用action中的以methodname命名的方法 -->
 		<action name="employee_*" class="employeeAction" method="{1}">
 			<result name="input">/index.jsp</result>
+			
 			<result name="findAll">/frame/listEmployee.jsp</result>
 			<result name="success" type="redirect">/frame.jsp</result>
 			<result name="saveUI">/frame/addEmployee.jsp</result>
