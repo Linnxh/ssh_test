@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<!-- name：指定映射的实体类 table:指定映射到的表名 -->
+	<class name="com.mu.entity.Department" table="department">
+		<!-- name：指定Product类中的属性名 column:指定为id的字段名 generator:生成策略为本地（默认自动增长） -->
+		<id name="did" column="did">
+			<generator class="native" />
+		</id>
+		<property name="dname" column="dname" length="20" />
+		<property name="ddesc" column="ddesc" length="100" />
+		<!-- 关联关系映射 inverse="true"放弃一对多的映射关系 cascade="delete“删除的时候 -->
+
+		<!-- 配置关联关系的映射 name对应类中的属性 class对应属性属于哪个类 column对应该属性对应数据库中的哪一列，该列是外键 cascade="delete" 
+			是一个级联属性，删除部门时该部门下的员工一起删除 inverse="true" 放弃外键维护权 true是放弃，false是不放弃 -->
+		<set name="employees" inverse="true" cascade="delete">
+			<key column="dno"></key>
+			<one-to-many class="com.mu.entity.Employee"></one-to-many>
+		</set>
+	</class>
+</hibernate-mapping>

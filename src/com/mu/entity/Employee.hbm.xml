@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<!-- private String ename; private String sex; private Date birthday; private 
+	Date joinDate; private String eno; private String username; private String 
+	password; -->
+<hibernate-mapping>
+	<!-- name：指定映射的实体类 table:指定映射到的表名 -->
+	<class name="com.mu.entity.Employee" table="employee">
+		<!-- name：指定Product类中的属性名 column:指定为id的字段名 generator:生成策略为本地（默认自动增长） -->
+		<id name="eid" column="eid">
+			<generator class="native" />
+		</id>
+		<property name="ename" column="ename" length="20" />
+		<property name="sex" column="sex" length="100" />
+		<property name="birthday" column="birthday" />
+		<property name="joinDate" column="joinDate" />
+		<property name="eno" column="eno" length="20" />
+		<property name="username" column="username" length="20" />
+		<property name="password" column="password" length="100" />
+		<!-- 配置关联关系的映射 name对应类中的属性 class对应属性属于哪个类 column对应该属性对应数据库中的哪一列，该列是外键 -->
+		<many-to-one name="department" class="com.mu.entity.Department"
+			column="dno" lazy="false"></many-to-one>
+	</class>
+</hibernate-mapping>

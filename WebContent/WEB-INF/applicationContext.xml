@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<!-- 引入外部配置文件jdbc.properties -->
+	<context:property-placeholder location="classpath:jdbc.properties" />
+	<!-- 配置c3p0连接池 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driverClass}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 每300秒检查所有连接池中的空闲连接 -->
+		<property name="idleConnectionTestPeriod" value="300"></property>
+		<!-- 最大空闲时间,900秒内未使用则连接被丢弃。若为0则永不丢弃 -->
+		<property name="maxIdleTime" value="900"></property>
+		<!-- 最大连接数 -->
+		<property name="maxPoolSize" value="2"></property>
+	</bean>
+
+	<!-- 配置hibernate相关属性 也可以使用hibernate.cfg.xml配置文件进行配置 -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<!-- 注入连接池 -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- 配置hibernate属性 -->
+		<property name="hibernateProperties">
+			<props>
+				<!-- 配置方言为mysql方言 -->
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<!-- 打印sql语句 -->
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+		<!-- 加载Hibernate中的对象映射文件 -->
+		<property name="mappingResources">
+			<!-- 对象为多个，使用list -->
+			<list>
+				<!-- 这里的路径是相对于src/下的路径 -->
+				<value>com/mu/entity/Product.hbm.xml</value>
+				<value>com/mu/entity/Employee.hbm.xml</value>
+				<value>com/mu/entity/Department.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 配置hibernate事务管理 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- 开启注解事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!-- 配置注入Action bean 这时Action类交由spring进行管理 -->
+	<bean id="productAction" class="com.mu.action.ProductAction"
+		scope="prototype">
+		<property name="productService" ref="productService"></property>
+	</bean>
+
+	<bean id="employeeAction" class="com.mu.action.EmployeeAction"
+		scope="prototype">
+		<property name="employeeService" ref="employeeService"></property>
+		<!-- 对应着action中的departmentService属性 -->
+		<property name="departmentService" ref="departmentService"></property>
+	</bean>
+
+	<bean id="departmentAction" class="com.mu.action.DepartmentAction"
+		scope="prototype">
+		<property name="departmentService" ref="departmentService"></property>
+	</bean>
+
+	<!-- 配置注入productService bean -->
+	<bean id="productService" class="com.mu.service.ProductService">
+		<property name="productDao" ref="productDao"></property>
+	</bean>
+
+	<bean id="employeeService" class="com.mu.service.impl.EmployeeServiceImpl">
+		<property name="employeeDao" ref="employeeDao"></property>
+	</bean>
+
+	<bean id="departmentService" class="com.mu.service.impl.DepartmentServiceImpl">
+		<property name="departmentDao" ref="departmentDao"></property>
+	</bean>
+	<!-- 配置注入productDao bean -->
+	<bean id="productDao" class="com.mu.dao.ProductDao">
+		<!-- 注入sessionFactory，这样就可以使用hibernate框架操作数据库 -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<bean id="employeeDao" class="com.mu.dao.impl.EmployeeDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="departmentDao" class="com.mu.dao.impl.DepartmentDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<!-- 配置注入product -->
+	<bean id="product" class="com.mu.entity.Product">
+		<property name="pid">
+			<value>1</value>
+		</property>
+		<property name="pname">
+			<value>小强</value>
+		</property>
+		<property name="price">
+			<value>2.9</value>
+		</property>
+	</bean>
+
+</beans>
