@@ -21,9 +21,9 @@
 			<result name="saveUI">/frame/addEmployee.jsp</result>
 			<result name="add" type="redirectAction">employee_findAll.action</result>
 			<result name="edit">/frame/editEmployee.jsp	</result>
-			<result name="updateSuccess" type="redirectAction">employee_findAll.action
+			<result name="updateSuccess" type="redirect">employee_findAll.action
 			</result>
-			<result name="deleteSuccess" type="redirectAction">employee_findAll.action
+			<result name="deleteSuccess" type="redirect">employee_findAll.action
 			</result>
 		</action>
 		<action name="department_*" class="departmentAction" method="{1}">
