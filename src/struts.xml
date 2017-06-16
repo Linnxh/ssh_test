@@ -15,7 +15,7 @@
 		<!-- name= "Product_*" 代表这个action处理所有以Product_*开头的请求 method= "{1} " 根据前面请求Product_*methodname，调用action中的以methodname命名的方法 -->
 		<action name="employee_*" class="employeeAction" method="{1}">
 			<result name="input">/index.jsp</result>
-			
+
 			<result name="findAll">/frame/listEmployee.jsp</result>
 			<result name="success" type="redirect">/frame.jsp</result>
 			<result name="saveUI">/frame/addEmployee.jsp</result>
@@ -37,6 +37,48 @@
 			<result name="deleteSuccess" type="redirectAction">department_findAll.action
 			</result>
 		</action>
+
 	</package>
+	<!-- sso- -->
+	<package name="sso" namespace="/sso" extends="struts-default">
+		<action name="dologin" class="com.mu.sso.SSOAction" method="dologin">
+			<result name="success" type="redirect">/sso/success1.jsp</result>
+			<result name="login">/sso/login.jsp</result>
+		</action>
+	</package>
+	<package name="demo1" namespace="/demo1" extends="struts-default">
+		<action name="main" class="com.mu.sso.Demo1Action" method="main">
+			<result name="success">/sso/success1.jsp</result>
+			<result name="login">/sso/login.jsp</result>
+		</action>
+	</package>
+
+	<package name="demo2" namespace="/demo2" extends="struts-default">
+		<action name="main" class="com.mu.sso.Demo2Action" method="main">
+			<result name="success">/sso//success2.jsp</result>
+			<result name="login">/sso//login.jsp</result>
+		</action>
+	</package>
+	<!-- sso-domain -->
+	<package name="sso-domain" namespace="/sso-domain" extends="struts-default">
+		<action name="dologin" class="sso_domain.SSOAction" method="dologin">
+			<result name="success" type="redirect">/sso_domain/success1.jsp</result>
+			<result name="login">/sso_domain/login.jsp</result>
+		</action>
+	</package>
+	<package name="demo1" namespace="/demo1" extends="struts-default">
+		<action name="main" class="com.mu.sso.Demo1Action" method="main">
+			<result name="success">/sso_domain/success1.jsp</result>
+			<result name="login">/sso_domain/login.jsp</result>
+		</action>
+	</package>
+	<package name="demo2" namespace="/demo2" extends="struts-default">
+		<action name="main" class="com.mu.sso.Demo2Action" method="main">
+			<result name="success">/sso_domain//success2.jsp</result>
+			<result name="login">/sso_domain//login.jsp</result>
+		</action>
+	</package>
+
+
 
 </struts>
